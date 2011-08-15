@@ -1,4 +1,8 @@
 class postfix::config {
+    Mailalias {
+        notify => Exec['newaliases'],
+    }
+
     file { $postfix::params::mailname_file:
         ensure  => present,
         content => "${fqdn}\n",
@@ -7,7 +11,7 @@ class postfix::config {
     file { $postfix::params::aliases_file:
         ensure  => present,
         content => '# file managed by puppet\n',
-        replace => false,
+        source  => 'puppet:///modules/postfix/aliases',
         notify  => Exec['newaliases'],
     }
 
