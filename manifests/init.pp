@@ -1,2 +1,3 @@
-import "classes/*.pp"
-import "definitions/*.pp"
+class postfix {
+    include postfix::params, postfix::install, postfix::config, postfix::service
+}
