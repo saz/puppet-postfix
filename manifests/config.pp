@@ -10,7 +10,7 @@ class postfix::config {
 
     file { $postfix::params::aliases_file:
         ensure  => present,
-        source  => 'puppet:///modules/postfix/aliases',
+        replace => false,
         notify  => Exec['newaliases'],
     }
 
