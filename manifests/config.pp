@@ -22,6 +22,6 @@ class postfix::config {
     }
 
     mailalias { 'root':
-        recipient => $postfix::params::postfix_root_mail_recipient,
+        recipient => $postfix::params::root_mail_recipient,
     }
 }

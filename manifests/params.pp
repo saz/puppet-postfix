@@ -1,7 +1,8 @@
 class postfix::params {
     # Default values
     case $postfix_root_mail_recipient {
-        '': { $postfix_root_mail_recipient = 'nobody' }
+        '': { $root_mail_recipient = 'nobody' }
+        default: { $root_mail_recipient = $postfix_root_mail_recipient }
     }
 
     case $operatingsystem {
