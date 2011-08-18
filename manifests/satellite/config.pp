@@ -6,7 +6,7 @@ class postfix::satellite::config {
         mode    => 644,
         source  => 'puppet:///modules/postfix/satellite/master.cf',
         notify  => Class['postfix::service'],
-        require => Class['postfix'],
+        require => Class['postfix::install'],
     }
 
     file { $postfix::params::main_file:
@@ -16,6 +16,6 @@ class postfix::satellite::config {
         mode    => 644,
         content => template('postfix/satellite/main.cf.erb'),
         notify  => Class['postfix::service'],
-        require => Class['postfix'],
+        require => Class['postfix::install'],
     }
 }
