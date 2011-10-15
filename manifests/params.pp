@@ -5,6 +5,11 @@ class postfix::params {
         default: { $root_mail_recipient = $postfix_root_mail_recipient }
     }
 
+    case $postfix_relayhost {
+        '': { $relayhost = "smtp.${domain}" }
+        default: { $relayhost = $postfix_relayhost }
+    }
+
     case $operatingsystem {
         /(Ubuntu|Debian)/: {
             $package_name = 'postfix'
