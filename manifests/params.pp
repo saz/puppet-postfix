@@ -1,30 +1,34 @@
 class postfix::params {
-    # Default values
-    case $postfix_root_mail_recipient {
-        '': { $root_mail_recipient = 'nobody' }
-        default: { $root_mail_recipient = $postfix_root_mail_recipient }
-    }
+  case $::operatingsystem {
+    ubuntu, debian: {
+      $package = 'postfix'
+      $service = 'postfix'
+      $service_hasstatus = true
+      $service_hasrestart = true
+      $aliases_file = '/etc/aliases'
+      $mailname_file = '/etc/mailname'
+      $newaliases_cmd = '/usr/bin/newaliases'
 
-    case $postfix_relayhost {
-        '': { $relayhost = "smtp.${domain}" }
-        default: { $relayhost = $postfix_relayhost }
-    }
+      $config_dir = '/etc/postfix/'
+      $master_file = "${config_dir}master.cf"
+      $main_file = "${config_dir}main.cf"
 
-    case $operatingsystem {
-        /(Ubuntu|Debian)/: {
-            $package_name = 'postfix'
-            $service_name = 'postfix'
-            $config_dir = '/etc/postfix/'
-            $master_file = "${config_dir}master.cf"
-            $main_file = "${config_dir}main.cf"
-            $aliases_file = '/etc/aliases'
-            $mailname_file = '/etc/mailname'
-            $newaliases_cmd = '/usr/bin/newaliases'
-
-            case $lsbdistcodename {
-                squeeze: { $mailx_package_name = 'bsd-mailx' }
-                default: { $mailx_package_name = 'mailx' }
-            }
+      if is_numeric($lsbmajdistrelease) {
+        if $::operatingsystem == 'ubuntu' {
+          $majrelease = 10
+        } else {
+          $majrelease = 6
         }
+
+        if $lsbmajdistrelease >= $majrelease {
+          $package_mailx = 'bsd-mailx'
+        } else {
+          $package_mailx = 'mailx'
+        }
+      }
     }
+    default: {
+      fail("Unsupported platform: ${::operatingsystem}")
+    }
+  }
 }
