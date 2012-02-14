@@ -1,8 +1,8 @@
 class postfix::satellite(
+  $ensure = 'present',
   $relayhost = "smtp.${::domain}",
   $root_mail_recipient = '',
   $install_mailx = true,
-  $ensure = 'present',
   $autoupgrade = false,
   $service_ensure = 'running',
   $service_enable = true,
@@ -23,7 +23,15 @@ class postfix::satellite(
   $main_file = $postfix::params::main_file
 ) inherits postfix::params {
 
-  validate_bool($install_mailx, $autoupgrade, $service_enable, $monitor, $firewall, $service_hasstatus, $service_hasrestart)
+  validate_bool(
+    $install_mailx,
+    $autoupgrade,
+    $service_enable,
+    $monitor,
+    $firewall,
+    $service_hasstatus,
+    $service_hasrestart
+  )
 
   case $ensure {
     present: {
@@ -32,7 +40,7 @@ class postfix::satellite(
       } else {
         $package_ensure = 'present'
       }
-      
+
       case $service_ensure {
         running, stopped: {
           $service_ensure_real = $service_ensure
@@ -55,9 +63,9 @@ class postfix::satellite(
   }
 
   class { 'postfix':
+    ensure              => $ensure,
     root_mail_recipient => $root_mail_recipient,
     install_mailx       => $install_mailx,
-    ensure              => $ensure,
     autoupgrade         => $autoupgrade,
     service_ensure      => $service_ensure,
     service_enable      => $service_enable,
