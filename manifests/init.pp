@@ -1,7 +1,7 @@
 class postfix(
+  $ensure = 'present',
   $root_mail_recipient = '',
   $install_mailx = true,
-  $ensure = 'present',
   $autoupgrade = false,
   $service_ensure = 'running',
   $service_enable = true,
