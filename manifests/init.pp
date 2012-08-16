@@ -20,7 +20,15 @@ class postfix(
   $mailname_file = $postfix::params::mailname_file
 ) inherits postfix::params {
 
-  validate_bool($install_mailx, $autoupgrade, $service_enable, $monitor, $firewall, $service_hasstatus, $service_hasrestart)
+  validate_bool(
+    $install_mailx,
+    $autoupgrade,
+    $service_enable,
+    $monitor,
+    $firewall,
+    $service_hasstatus,
+    $service_hasrestart
+  )
 
   case $ensure {
     present: {
@@ -29,10 +37,13 @@ class postfix(
       } else {
         $package_ensure = 'present'
       }
-      
+
       case $service_ensure {
         running, stopped: {
           $service_ensure_real = $service_ensure
+        }
+        false: {
+          $service_ensure_real = undef
         }
         default: {
           fail('service_ensure parameter must be running or stopped')
@@ -67,7 +78,7 @@ class postfix(
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    content => "${fqdn}\n",
+    content => "${::fqdn}\n",
     require => Package[$package],
     notify  => Service[$service],
   }

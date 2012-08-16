@@ -1,6 +1,6 @@
 class postfix::params {
-  case $::operatingsystem {
-    ubuntu, debian: {
+  case $::osfamily {
+    'Debian': {
       $package = 'postfix'
       $service = 'postfix'
       $service_hasstatus = true
@@ -13,14 +13,14 @@ class postfix::params {
       $master_file = "${config_dir}master.cf"
       $main_file = "${config_dir}main.cf"
 
-      if is_numeric($lsbmajdistrelease) {
+      if is_numeric($::lsbmajdistrelease) {
         if $::operatingsystem == 'ubuntu' {
           $majrelease = 10
         } else {
           $majrelease = 6
         }
 
-        if $lsbmajdistrelease >= $majrelease {
+        if $::lsbmajdistrelease >= $majrelease {
           $package_mailx = 'bsd-mailx'
         } else {
           $package_mailx = 'mailx'
