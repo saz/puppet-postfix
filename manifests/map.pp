@@ -1,4 +1,5 @@
 define postfix::map (
+  $map_name,
   $ensure = 'present',
   $type = 'none',
   $maps = [],
@@ -14,8 +15,8 @@ define postfix::map (
   }
 
   $map_target = $instance ? {
-    ''      => "${base_dir}/${name}",
-    default => "${base_dir}-${instance}/${name}",
+    ''      => "${base_dir}/${map_name}",
+    default => "${base_dir}-${instance}/${map_name}",
   }
 
   $map = "${type}:${map_target}"
