@@ -21,7 +21,7 @@ define postfix::map (
   $map = "${type}:${map_target}"
 
   $map_notify = $ensure ? {
-    present => Exec["postmap ${map_target}"],
+    present => Exec["postmap ${map}"],
     absent  => undef,
   }
 
