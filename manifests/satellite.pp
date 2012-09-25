@@ -92,7 +92,7 @@ class postfix::satellite(
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    source  => 'puppet:///modules/postfix/satellite/master.cf',
+    source  => "puppet:///modules/${module_name}/${postfix::params::config_file_source}/satellite/master.cf",
     require => Package[$package],
     notify  => Service[$service],
   }
@@ -102,7 +102,7 @@ class postfix::satellite(
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    content => template('postfix/satellite/main.cf.erb'),
+    content => template("${module_name}/${postfix::params::config_file_source}/satellite/main.cf.erb"),
     require => Package[$package],
     notify  => Service[$service],
   }
