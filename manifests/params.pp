@@ -1,6 +1,7 @@
 class postfix::params {
   case $::osfamily {
-    'Debian': {
+    debian: {
+      $config_file_source = $::osfamily
       $package = 'postfix'
       $service = 'postfix'
       $service_hasstatus = true
@@ -27,8 +28,28 @@ class postfix::params {
         }
       }
     }
+    freebsd: {
+      $config_file_source = $::osfamily
+      $package = 'mail/postfix'
+      $service = 'postfix'
+      $service_hasstatus = true
+      $service_hasrestart = true
+      $aliases_file = '/etc/aliases'
+      $mailname_file = '/etc/mailname'
+      $newaliases_cmd = '/usr/bin/newaliases'
+
+      $config_dir = '/usr/local/etc/postfix/'
+      $master_file = "${config_dir}master.cf"
+      $main_file = "${config_dir}main.cf"
+
+      $package_mailx = 'mail/mailx'
+    }
     default: {
-      fail("Unsupported platform: ${::operatingsystem}")
+      case $::operatingsystem {
+        default: {
+          fail("Unsupported platform: ${::osfamily}/${::operatingsystem}")
+        }
+      }
     }
   }
 }
