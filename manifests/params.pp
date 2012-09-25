@@ -1,7 +1,7 @@
 class postfix::params {
   case $::osfamily {
     debian: {
-      $config_file_source = $::osfamily
+      $config_file_source = downcase($::osfamily)
       $package = 'postfix'
       $service = 'postfix'
       $service_hasstatus = true
@@ -29,7 +29,7 @@ class postfix::params {
       }
     }
     freebsd: {
-      $config_file_source = $::osfamily
+      $config_file_source = downcase($::osfamily)
       $package = 'mail/postfix'
       $service = 'postfix'
       $service_hasstatus = true
