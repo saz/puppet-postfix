@@ -14,9 +14,15 @@ define postfix::map (
     }
   }
 
-  $map_target = $instance ? {
-    ''      => "${base_dir}/${map_name}",
-    default => "${base_dir}-${instance}/${map_name}",
+  case $instance {
+    '': {
+      $map_target = "${base_dir}/${map_name}"
+      $base_dir_real = $base_dir
+    }
+    default: {
+      $map_target = "${base_dir}-${instance}/${map_name}"
+      $base_dir_real = "${base_dir}-${instance}"
+    }
   }
 
   $map = "${type}:${map_target}"
@@ -26,7 +32,6 @@ define postfix::map (
     absent  => undef,
   }
 
-  # TODO: require postfix instance
   file { $map_target:
     ensure  => $ensure,
     owner   => 'root',
@@ -34,6 +39,7 @@ define postfix::map (
     mode    => '0644',
     notify  => $map_notify,
     content => template("${module_name}/map.erb"),
+    require => File[$base_dir_real],
   }
 
   case $type {
@@ -45,10 +51,10 @@ define postfix::map (
     }
   }
 
-  # TODO: notify postfix instance
   exec { "postmap ${map}":
     command     => $cmd,
     path        => '/bin:/usr/sbin',
     refreshonly => true,
+    notify      => Service['postfix'],
   }
 }
