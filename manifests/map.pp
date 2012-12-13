@@ -51,10 +51,16 @@ define postfix::map (
     }
   }
 
+  file { "${map_target}.db":
+    ensure  => file,
+    require => Exec["postmap ${map}"],
+  }
+
   exec { "postmap ${map}":
     command     => $cmd,
     path        => '/bin:/usr/sbin',
-    refreshonly => true,
+    creates     => "${map_target}.db",
+    require     => File[$map_target],
     notify      => Service['postfix'],
   }
 }
